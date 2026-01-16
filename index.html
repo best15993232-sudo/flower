@@ -293,6 +293,114 @@
             }
         }
 
+        /* 상품 확대 모달 */
+        .image-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10002;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .image-modal-overlay.show {
+            display: flex;
+        }
+
+        .image-modal-content {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            animation: modalZoomIn 0.3s ease;
+        }
+
+        @keyframes modalZoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            z-index: 1;
+            transition: background 0.2s;
+        }
+
+        .image-modal-close:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .image-modal-img {
+            width: 100%;
+            height: 300px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .image-modal-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-modal-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .image-modal-type {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .image-modal-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e91e63;
+        }
+
+        @media (max-width: 480px) {
+            .image-modal-content {
+                max-width: 90%;
+            }
+
+            .image-modal-img {
+                height: 250px;
+            }
+        }
+
         /* 꽃집 선택 버튼 */
         .shop-footer {
             padding: 12px 16px;
@@ -1069,6 +1177,18 @@
     <!-- 토스트 메시지 -->
     <div class="toast" id="toast"></div>
 
+    <!-- 상품 확대 모달 -->
+    <div class="image-modal-overlay" id="imageModal">
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+            <div class="image-modal-img" id="imageModalImg"></div>
+            <div class="image-modal-info">
+                <div class="image-modal-type" id="imageModalType"></div>
+                <div class="image-modal-price" id="imageModalPrice"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- 카톡 문의 플로팅 버튼 -->
     <a href="https://pf.kakao.com/_MGnWn/chat" target="_blank" class="kakao-float-btn">
         <svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.84 1.88 5.33 4.7 6.77L5.6 21l4.08-2.41c.76.11 1.53.16 2.32.16 5.5 0 10-3.58 10-8s-4.5-8-10-8z"/></svg>
@@ -1079,41 +1199,63 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2a2757bfe21447887d8528345d95588d&libraries=services"></script>
 
     <script>
-        // 샘플 꽃집 데이터
-        const shopData = {
-            'default': [
-                {
-                    id: 'seoul-a',
-                    name: '서울A 플라워',
-                    flowers: [
-                        { img: '', price: '35,000원', type: '꽃다발' },
-                        { img: '', price: '55,000원', type: '꽃바구니' },
-                        { img: '', price: '75,000원', type: '플라워박스' },
-                        { img: '', price: '45,000원', type: '꽃다발' }
-                    ]
-                },
-                {
-                    id: 'seoul-b',
-                    name: '서울B 플로리스트',
-                    flowers: [
-                        { img: '', price: '40,000원', type: '꽃다발' },
-                        { img: '', price: '60,000원', type: '꽃바구니' },
-                        { img: '', price: '85,000원', type: '플라워박스' }
-                    ]
-                },
-                {
-                    id: 'seoul-c',
-                    name: '서울C 꽃집',
-                    flowers: [
-                        { img: '', price: '30,000원', type: '꽃다발' },
-                        { img: '', price: '50,000원', type: '꽃바구니' },
-                        { img: '', price: '70,000원', type: '플라워박스' },
-                        { img: '', price: '90,000원', type: '화분' },
-                        { img: '', price: '120,000원', type: '화환' }
-                    ]
-                }
-            ]
-        };
+        // 꽃집 데이터 (이름, 사진, 배송 가능 지역 등록)
+        const flowerShops = [
+            {
+                id: 'seoul-a',
+                name: '서울A 플라워',
+                deliveryAreas: ['송파구', '강남구', '서초구', '강동구'],
+                flowers: [
+                    { img: '', price: '35,000원', type: '꽃다발' },
+                    { img: '', price: '55,000원', type: '꽃바구니' },
+                    { img: '', price: '75,000원', type: '플라워박스' },
+                    { img: '', price: '45,000원', type: '꽃다발' }
+                ]
+            },
+            {
+                id: 'seoul-b',
+                name: '서울B 플로리스트',
+                deliveryAreas: ['마포구', '서대문구', '은평구', '종로구'],
+                flowers: [
+                    { img: '', price: '40,000원', type: '꽃다발' },
+                    { img: '', price: '60,000원', type: '꽃바구니' },
+                    { img: '', price: '85,000원', type: '플라워박스' }
+                ]
+            },
+            {
+                id: 'seoul-c',
+                name: '서울C 꽃집',
+                deliveryAreas: ['강남구', '종로구', '중구', '용산구', '성동구'],
+                flowers: [
+                    { img: '', price: '30,000원', type: '꽃다발' },
+                    { img: '', price: '50,000원', type: '꽃바구니' },
+                    { img: '', price: '70,000원', type: '플라워박스' },
+                    { img: '', price: '90,000원', type: '화분' },
+                    { img: '', price: '120,000원', type: '화환' }
+                ]
+            },
+            {
+                id: 'gangnam-flower',
+                name: '강남플라워',
+                deliveryAreas: ['강남구', '서초구', '송파구'],
+                flowers: [
+                    { img: '', price: '50,000원', type: '꽃다발' },
+                    { img: '', price: '80,000원', type: '꽃바구니' },
+                    { img: '', price: '100,000원', type: '플라워박스' }
+                ]
+            },
+            {
+                id: 'jongro-flower',
+                name: '종로꽃배달',
+                deliveryAreas: ['종로구', '중구', '서대문구', '마포구'],
+                flowers: [
+                    { img: '', price: '32,000원', type: '꽃다발' },
+                    { img: '', price: '52,000원', type: '꽃바구니' },
+                    { img: '', price: '72,000원', type: '플라워박스' },
+                    { img: '', price: '95,000원', type: '화분' }
+                ]
+            }
+        ];
 
         // 선택된 꽃집 정보 저장
         let selectedShop = null;
@@ -1252,52 +1394,53 @@
             // 직접 입력한 주소도 저장
             selectedAddress = address;
 
-            // 주소에서 지역명 추출 (간단한 처리)
-            let areaName = address;
-            const parts = address.split(' ');
-            if (parts.length >= 2) {
-                areaName = parts[1]; // 구/동 이름
+            // 주소에서 지역명(구/동) 추출
+            const areaName = extractAreaName(address);
+
+            // 배송 가능 지역에 해당 지역이 포함된 꽃집 필터링
+            const shops = findShopsByDeliveryArea(areaName);
+
+            if (shops.length === 0) {
+                showToast('해당 지역에 배송 가능한 꽃집이 없습니다');
+                document.getElementById('resultInfo').style.display = 'none';
+                document.getElementById('shopList').innerHTML = '';
+                return;
             }
 
-            // 샘플 데이터로 꽃집 표시
-            const shops = generateShopsForArea(areaName);
             displayShops(areaName, shops);
         }
 
-        // 지역에 맞는 꽃집 데이터 생성
-        function generateShopsForArea(areaName) {
-            return [
-                {
-                    id: areaName + '-a',
-                    name: areaName + 'A 플라워',
-                    flowers: [
-                        { img: '', price: '35,000원', type: '꽃다발' },
-                        { img: '', price: '55,000원', type: '꽃바구니' },
-                        { img: '', price: '75,000원', type: '플라워박스' },
-                        { img: '', price: '45,000원', type: '꽃다발' }
-                    ]
-                },
-                {
-                    id: areaName + '-b',
-                    name: areaName + 'B 플로리스트',
-                    flowers: [
-                        { img: '', price: '40,000원', type: '꽃다발' },
-                        { img: '', price: '60,000원', type: '꽃바구니' },
-                        { img: '', price: '85,000원', type: '플라워박스' }
-                    ]
-                },
-                {
-                    id: areaName + '-c',
-                    name: areaName + 'C 꽃집',
-                    flowers: [
-                        { img: '', price: '30,000원', type: '꽃다발' },
-                        { img: '', price: '50,000원', type: '꽃바구니' },
-                        { img: '', price: '70,000원', type: '플라워박스' },
-                        { img: '', price: '90,000원', type: '화분' },
-                        { img: '', price: '120,000원', type: '화환' }
-                    ]
-                }
-            ];
+        // 주소에서 구/동 이름 추출
+        function extractAreaName(address) {
+            // "구" 단위 추출 시도 (예: 송파구, 강남구)
+            const guMatch = address.match(/([가-힣]+구)/);
+            if (guMatch) {
+                return guMatch[1];
+            }
+
+            // "동" 단위 추출 시도 (예: 잠실동, 역삼동)
+            const dongMatch = address.match(/([가-힣]+동)/);
+            if (dongMatch) {
+                return dongMatch[1];
+            }
+
+            // 공백으로 분리하여 두 번째 요소 반환
+            const parts = address.split(' ');
+            if (parts.length >= 2) {
+                return parts[1];
+            }
+
+            return address;
+        }
+
+        // 배송 가능 지역으로 꽃집 검색
+        function findShopsByDeliveryArea(searchArea) {
+            return flowerShops.filter(shop => {
+                // 배송 가능 지역 중 검색어가 포함되어 있는지 확인
+                return shop.deliveryAreas.some(area =>
+                    area.includes(searchArea) || searchArea.includes(area)
+                );
+            });
         }
 
         // 꽃집 목록 표시
@@ -1317,7 +1460,7 @@
                     <div class="gallery-wrapper">
                         <div class="shop-gallery" id="gallery-${shopIdx}" onscroll="updateScrollbar('gallery-${shopIdx}')">
                             ${shop.flowers.map((flower, idx) => `
-                                <div class="gallery-item">
+                                <div class="gallery-item" onclick="openImageModal('${flower.img || ''}', '${flower.price}', '${flower.type}', ${idx + 1})">
                                     <div class="gallery-img">${flower.img || '사진 ' + (idx + 1)}</div>
                                     <div class="gallery-price">${flower.price}</div>
                                     <div class="gallery-type">${flower.type}</div>
@@ -1502,6 +1645,54 @@
         document.getElementById('placeSearchModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closePlaceSearchModal();
+            }
+        });
+
+        // 상품 확대 모달 열기
+        function openImageModal(img, price, type, index) {
+            const modal = document.getElementById('imageModal');
+            const imgContainer = document.getElementById('imageModalImg');
+            const priceEl = document.getElementById('imageModalPrice');
+            const typeEl = document.getElementById('imageModalType');
+
+            if (img) {
+                imgContainer.innerHTML = `<img src="${img}" alt="${type}">`;
+            } else {
+                imgContainer.innerHTML = '사진 ' + index;
+            }
+
+            priceEl.textContent = price;
+            typeEl.textContent = type;
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 상품 확대 모달 닫기
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // 상품 확대 모달 바깥 클릭시 닫기
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const imageModal = document.getElementById('imageModal');
+                const placeModal = document.getElementById('placeSearchModal');
+
+                if (imageModal.classList.contains('show')) {
+                    closeImageModal();
+                } else if (placeModal.classList.contains('show')) {
+                    closePlaceSearchModal();
+                }
             }
         });
     </script>
