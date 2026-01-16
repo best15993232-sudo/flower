@@ -219,50 +219,78 @@
             text-align: center;
         }
 
-        /* 갤러리 진행 바 */
-        .gallery-progress-wrapper {
-            padding: 8px 16px 14px;
+        /* 갤러리 네비게이션 */
+        .gallery-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px 12px;
         }
 
-        .gallery-progress {
-            width: 100%;
-            height: 6px;
+        /* 스크롤바 */
+        .gallery-scrollbar {
+            flex: 1;
+            height: 4px;
             background: #eee;
-            border-radius: 3px;
-            overflow: visible;
-            position: relative;
-            cursor: pointer;
+            border-radius: 2px;
+            overflow: hidden;
         }
 
-        .gallery-progress-bar {
+        .gallery-scrollbar-thumb {
             height: 100%;
             background: #e91e63;
-            border-radius: 3px;
+            border-radius: 2px;
             transition: width 0.1s ease;
             min-width: 20%;
-            cursor: grab;
-            position: relative;
         }
 
-        .gallery-progress-bar:active {
-            cursor: grabbing;
+        /* 좌우 화살표 버튼 - PC에서만 표시 */
+        .gallery-arrows {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
-        .gallery-progress-bar::after {
-            content: '';
-            position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%);
+        .gallery-arrow-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .gallery-arrow-btn:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .gallery-arrow-btn:active {
+            transform: scale(0.95);
+        }
+
+        .gallery-arrow-btn svg {
             width: 14px;
             height: 14px;
-            background: #e91e63;
-            border-radius: 50%;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            stroke: #666;
+            fill: none;
+            stroke-width: 2;
         }
 
-        .gallery-progress:hover .gallery-progress-bar::after {
-            transform: translateY(-50%) scale(1.2);
+        .gallery-arrow-btn:hover svg {
+            stroke: #333;
+        }
+
+        /* 모바일에서 화살표 버튼 숨김 */
+        @media (max-width: 768px) {
+            .gallery-arrows {
+                display: none;
+            }
         }
 
         /* 꽃집 선택 버튼 */
@@ -1287,7 +1315,7 @@
                         <span class="shop-name">${shop.name}</span>
                     </div>
                     <div class="gallery-wrapper">
-                        <div class="shop-gallery" id="gallery-${shopIdx}" onscroll="updateProgress('gallery-${shopIdx}')">
+                        <div class="shop-gallery" id="gallery-${shopIdx}" onscroll="updateScrollbar('gallery-${shopIdx}')">
                             ${shop.flowers.map((flower, idx) => `
                                 <div class="gallery-item">
                                     <div class="gallery-img">${flower.img || '사진 ' + (idx + 1)}</div>
@@ -1296,9 +1324,17 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <div class="gallery-progress-wrapper">
-                            <div class="gallery-progress" id="progress-track-${shopIdx}" onmousedown="startDrag(event, 'gallery-${shopIdx}')" onclick="clickProgress(event, 'gallery-${shopIdx}')">
-                                <div class="gallery-progress-bar" id="progress-${shopIdx}" style="width: 20%;"></div>
+                        <div class="gallery-nav">
+                            <div class="gallery-scrollbar">
+                                <div class="gallery-scrollbar-thumb" id="scrollbar-${shopIdx}"></div>
+                            </div>
+                            <div class="gallery-arrows">
+                                <button class="gallery-arrow-btn" onclick="scrollGallery('gallery-${shopIdx}', -1)">
+                                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                                </button>
+                                <button class="gallery-arrow-btn" onclick="scrollGallery('gallery-${shopIdx}', 1)">
+                                    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1308,80 +1344,43 @@
                 </div>
             `).join('');
 
-            // 초기 진행 바 상태 설정
-            shops.forEach((shop, shopIdx) => {
-                updateProgress('gallery-' + shopIdx);
-            });
+            // 초기 스크롤바 상태 설정
+            setTimeout(() => {
+                shops.forEach((_, shopIdx) => {
+                    updateScrollbar('gallery-' + shopIdx);
+                });
+            }, 100);
         }
 
-        // 스크롤 시 진행 바 업데이트
-        function updateProgress(galleryId) {
+        // 갤러리 스크롤 (화살표 버튼)
+        function scrollGallery(galleryId, direction) {
             const gallery = document.getElementById(galleryId);
-            const progressBar = document.getElementById(galleryId.replace('gallery-', 'progress-'));
+            const itemWidth = 128; // 아이템 너비 + gap
+            gallery.scrollLeft += direction * itemWidth;
+        }
+
+        // 스크롤바 업데이트
+        function updateScrollbar(galleryId) {
+            const gallery = document.getElementById(galleryId);
+            const scrollbarThumb = document.getElementById(galleryId.replace('gallery-', 'scrollbar-'));
 
             const maxScroll = gallery.scrollWidth - gallery.clientWidth;
 
             if (maxScroll <= 0) {
-                progressBar.style.width = '100%';
+                scrollbarThumb.style.width = '100%';
                 return;
             }
 
             const scrollPercent = gallery.scrollLeft / maxScroll;
-            const barWidth = 20 + (scrollPercent * 80); // 20% ~ 100%
-            progressBar.style.width = barWidth + '%';
+            const thumbWidth = 20 + (scrollPercent * 80); // 20% ~ 100%
+            scrollbarThumb.style.width = thumbWidth + '%';
         }
 
-        // 진행 바 드래그 기능
-        let isDragging = false;
-        let currentGalleryId = null;
-
-        function startDrag(event, galleryId) {
-            event.preventDefault();
-            isDragging = true;
-            currentGalleryId = galleryId;
-            document.body.style.userSelect = 'none';
-
-            document.addEventListener('mousemove', onDrag);
-            document.addEventListener('mouseup', stopDrag);
-        }
-
-        function onDrag(event) {
-            if (!isDragging || !currentGalleryId) return;
-
-            const trackId = currentGalleryId.replace('gallery-', 'progress-track-');
-            const track = document.getElementById(trackId);
-            const gallery = document.getElementById(currentGalleryId);
-
-            const rect = track.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const percent = Math.max(0, Math.min(1, clickX / rect.width));
-
-            const maxScroll = gallery.scrollWidth - gallery.clientWidth;
-            gallery.scrollLeft = percent * maxScroll;
-        }
-
-        function stopDrag() {
-            isDragging = false;
-            currentGalleryId = null;
-            document.body.style.userSelect = '';
-
-            document.removeEventListener('mousemove', onDrag);
-            document.removeEventListener('mouseup', stopDrag);
-        }
-
-        function clickProgress(event, galleryId) {
-            if (isDragging) return;
-
-            const trackId = galleryId.replace('gallery-', 'progress-track-');
-            const track = document.getElementById(trackId);
-            const gallery = document.getElementById(galleryId);
-
-            const rect = track.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const percent = Math.max(0, Math.min(1, clickX / rect.width));
-
-            const maxScroll = gallery.scrollWidth - gallery.clientWidth;
-            gallery.scrollLeft = percent * maxScroll;
+        // 초기 스크롤바 설정
+        function initScrollbars() {
+            document.querySelectorAll('.shop-gallery').forEach(gallery => {
+                updateScrollbar(gallery.id);
+            });
         }
 
         // 꽃집 선택
