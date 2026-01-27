@@ -2,81 +2,138 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
-    <title>꽃배달 서비스 - 전국 꽃집 검색</title>
+    <title>블룸 딜리버리 - 당신의 마음을 전하세요</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* 감성적인 컬러 팔레트 */
+            --primary: #FF8A80;       /* 부드러운 코랄 핑크 */
+            --primary-dark: #E57373;  /* 진한 코랄 */
+            --accent: #81C784;        /* 자연스러운 그린 */
+            --bg: #FDFBF7;            /* 따뜻한 아이보리 배경 */
+            --surface: #FFFFFF;       /* 카드 배경 */
+            --text-main: #2C2C2C;     /* 진한 회색 텍스트 */
+            --text-sub: #8D8D8D;      /* 연한 회색 텍스트 */
+            --border: #F0F0F0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.08);
+            --radius: 20px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #fff;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
             min-height: 100vh;
-            color: #333;
         }
+
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
 
         .container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
-            padding: 16px;
+            background: var(--surface);
+            min-height: 100vh;
+            box-shadow: 0 0 40px rgba(0,0,0,0.03);
+            position: relative;
+            padding-bottom: 80px;
         }
 
-        /* 헤더 */
+        /* 헤더 스타일링 */
         .header {
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 20px;
+            text-align: left;
+            padding: 40px 24px 20px;
+            background: linear-gradient(180deg, #FFF5F5 0%, #FFFFFF 100%);
+        }
+
+        .header-top {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            color: var(--primary);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
         .header h1 {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: 700;
-            color: #e91e63;
+            color: var(--text-main);
+            line-height: 1.3;
+            margin-bottom: 8px;
         }
 
         .header p {
-            font-size: 13px;
-            color: #888;
-            margin-top: 6px;
+            font-size: 14px;
+            color: var(--text-sub);
         }
 
         /* 검색 섹션 */
         .search-section {
-            margin-bottom: 20px;
+            padding: 24px;
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            z-index: 99;
+            border-bottom: 1px solid var(--border);
         }
 
         .search-label {
             font-size: 15px;
             font-weight: 600;
-            color: #333;
+            color: var(--text-main);
             margin-bottom: 10px;
-            display: block;
+            display: none;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .search-box {
+            position: relative;
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            align-items: center;
         }
 
         .search-input {
-            flex: 1;
-            padding: 14px 16px;
-            border: 2px solid #e91e63;
-            border-radius: 12px;
+            width: 100%;
+            padding: 16px 20px;
+            padding-right: 100px;
+            background: #F8F9FA;
+            border: 1px solid transparent;
+            border-radius: 16px;
             font-size: 16px;
+            color: var(--text-main);
+            font-weight: 500;
             font-family: inherit;
             outline: none;
-            transition: box-shadow 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .search-input:focus {
-            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15);
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 138, 128, 0.1);
         }
 
         .search-input::placeholder {
@@ -84,102 +141,129 @@
         }
 
         .address-search-btn {
-            padding: 14px 16px;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 12px;
             background: #fff;
-            color: #e91e63;
-            border: 2px solid #e91e63;
-            border-radius: 12px;
-            font-size: 14px;
+            border: 1px solid #eee;
+            color: var(--text-main);
+            border-radius: 10px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
-            white-space: nowrap;
         }
 
         .address-search-btn:hover {
-            background: #fce4ec;
+            background: #FFF5F5;
+            border-color: var(--primary);
         }
 
         .search-btn {
             width: 100%;
-            padding: 14px 20px;
-            background: #e91e63;
+            padding: 16px;
+            background: var(--text-main);
             color: #fff;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(44, 44, 44, 0.2);
         }
 
         .search-btn:hover {
-            background: #c2185b;
+            background: #1a1a1a;
         }
 
         .search-btn:active {
             transform: scale(0.98);
         }
 
-        /* 검색 결과 정보 */
+        /* 검색 결과 및 리스트 */
+        .shop-list-section {
+            padding: 24px;
+            background: var(--bg);
+            min-height: 400px;
+        }
+
         .result-info {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 16px;
-            padding: 0 4px;
+            font-size: 15px;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .result-info strong {
-            color: #e91e63;
+            color: var(--primary-dark);
+            font-weight: 700;
         }
 
         /* 꽃집 리스트 */
         .shop-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 24px;
         }
 
         .shop-card {
-            border: 1px solid #eee;
-            border-radius: 16px;
+            background: #fff;
+            border-radius: var(--radius);
             overflow: hidden;
-            transition: box-shadow 0.2s ease;
+            box-shadow: var(--shadow);
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .shop-card:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
         }
 
         .shop-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 16px;
-            background: #fafafa;
-            border-bottom: 1px solid #eee;
+            padding: 20px;
+            background: #fff;
+            border-bottom: 1px solid #f5f5f5;
         }
 
         .shop-name {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
-            color: #333;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        /* 꽃 사진 갤러리 */
+        .shop-name::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* 갤러리 스타일 */
         .gallery-wrapper {
-            position: relative;
+            padding: 20px 0 10px;
         }
 
         .shop-gallery {
+            padding: 0 20px;
             display: flex;
+            gap: 12px;
             overflow-x: auto;
-            gap: 8px;
-            padding: 12px;
+            scroll-behavior: smooth;
+            padding-bottom: 15px;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            scroll-behavior: smooth;
         }
 
         .shop-gallery::-webkit-scrollbar {
@@ -187,87 +271,105 @@
         }
 
         .gallery-item {
+            width: 130px;
             flex-shrink: 0;
-            width: 120px;
             cursor: pointer;
         }
 
         .gallery-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: #f0f0f0;
+            width: 130px;
+            height: 130px;
+            border-radius: 16px;
+            background: #F2F2F2;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #bbb;
+            color: #aaa;
             font-size: 12px;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.03);
+        }
+
+        .gallery-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-info-box {
+            margin-top: 10px;
+            text-align: left;
         }
 
         .gallery-price {
-            font-size: 13px;
-            font-weight: 600;
-            color: #333;
-            margin-top: 6px;
-            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 10px;
+            text-align: left;
         }
 
         .gallery-type {
             font-size: 11px;
-            color: #888;
-            text-align: center;
+            color: var(--text-sub);
+            margin-bottom: 2px;
+            display: block;
+            text-align: left;
         }
 
         /* 갤러리 네비게이션 */
         .gallery-nav {
+            padding: 0 20px 10px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 8px 12px 12px;
+            justify-content: space-between;
         }
 
-        /* 스크롤바 */
         .gallery-scrollbar {
-            flex: 1;
-            height: 4px;
-            background: #eee;
+            height: 3px;
+            background: #f0f0f0;
             border-radius: 2px;
+            flex: 1;
+            margin-right: 15px;
             overflow: hidden;
         }
 
         .gallery-scrollbar-thumb {
             height: 100%;
-            background: #e91e63;
+            background: var(--primary);
             border-radius: 2px;
-            transition: width 0.1s ease;
-            min-width: 20%;
+            width: 20%;
+            transition: width 0.2s, margin-left 0.1s;
         }
 
-        /* 좌우 화살표 버튼 - PC에서만 표시 */
         .gallery-arrows {
             display: flex;
-            align-items: center;
-            gap: 4px;
-            flex-shrink: 0;
+            gap: 6px;
         }
 
         .gallery-arrow-btn {
             width: 28px;
             height: 28px;
-            border: 1px solid #ddd;
+            border: 1px solid #eee;
             background: #fff;
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            cursor: pointer;
+            color: #888;
+            transition: all 0.2s;
         }
 
         .gallery-arrow-btn:hover {
-            background: #f5f5f5;
-            border-color: #999;
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #FFF5F5;
         }
 
         .gallery-arrow-btn:active {
@@ -277,20 +379,16 @@
         .gallery-arrow-btn svg {
             width: 14px;
             height: 14px;
-            stroke: #666;
+            stroke: currentColor;
             fill: none;
             stroke-width: 2;
         }
 
-        .gallery-arrow-btn:hover svg {
-            stroke: #333;
-        }
-
         /* 모바일에서 화살표 버튼 숨김 */
-        @media (max-width: 768px) {
-            .gallery-arrows {
-                display: none;
-            }
+        @media (max-width: 480px) {
+            .gallery-item { width: 110px; }
+            .gallery-img { width: 110px; height: 110px; }
+            .gallery-arrows { display: none; }
         }
 
         /* 상품 확대 모달 */
@@ -301,7 +399,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 10002;
             align-items: center;
             justify-content: center;
@@ -314,13 +413,14 @@
 
         .image-modal-content {
             background: #fff;
-            border-radius: 16px;
+            border-radius: 24px;
             max-width: 400px;
             width: 100%;
             max-height: 90vh;
             overflow: hidden;
             position: relative;
             animation: modalZoomIn 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
 
         @keyframes modalZoomIn {
@@ -359,8 +459,8 @@
 
         .image-modal-img {
             width: 100%;
-            height: 300px;
-            background: #f0f0f0;
+            height: 350px;
+            background: #eee;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -388,7 +488,115 @@
         .image-modal-price {
             font-size: 24px;
             font-weight: 700;
-            color: #e91e63;
+            color: var(--primary-dark);
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background 0.2s;
+            background: #FFF5F5;
+            display: inline-block;
+            margin: 10px auto;
+        }
+
+        .image-modal-price:hover {
+            background: #FFE0DE;
+        }
+
+        .image-modal-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        /* 배송 희망일시 */
+        .delivery-time-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .delivery-date-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .delivery-date-row input[type="date"] {
+            flex: 2;
+            min-width: 140px;
+            padding: 14px 16px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            background: #F8F9FA;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .delivery-date-row input[type="date"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 138, 128, 0.1);
+            background: #fff;
+        }
+
+        .delivery-date-row select {
+            flex: 1;
+            min-width: 80px;
+            padding: 14px 16px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            appearance: none;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;
+            background-color: #F8F9FA;
+            cursor: pointer;
+        }
+
+        .delivery-date-row select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 138, 128, 0.1);
+            background-color: #fff;
+        }
+
+        .day-of-week {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .asap-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .asap-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .asap-option span {
+            font-weight: 500;
+        }
+
+        .delivery-date-row.disabled input,
+        .delivery-date-row.disabled select {
+            background-color: #f5f5f5;
+            color: #999;
+            pointer-events: none;
         }
 
         @media (max-width: 480px) {
@@ -403,77 +611,112 @@
 
         /* 꽃집 선택 버튼 */
         .shop-footer {
-            padding: 12px 16px;
-            border-top: 1px solid #eee;
+            padding: 16px 20px;
+            border-top: 1px solid #f5f5f5;
         }
 
         .select-shop-btn {
             width: 100%;
-            padding: 12px;
-            background: #e91e63;
+            padding: 14px;
+            background: var(--primary);
             color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s;
         }
 
         .select-shop-btn:hover {
-            background: #c2185b;
+            background: var(--primary-dark);
         }
 
         /* 주문서 섹션 */
         .order-section {
             display: none;
+            background: #fff;
+            min-height: 100vh;
+            padding-bottom: 100px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .order-section.active {
             display: block;
         }
 
-        .back-btn {
+        .order-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 10px 0;
-            margin-bottom: 16px;
+        }
+
+        .back-btn {
             background: none;
             border: none;
-            font-size: 14px;
-            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
             cursor: pointer;
         }
 
         .back-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: #666;
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
         }
 
         .back-btn:hover {
-            color: #333;
+            color: var(--primary);
         }
 
-        .back-btn:hover svg {
-            stroke: #333;
+        .order-content {
+            padding: 24px;
         }
 
         .selected-shop-info {
-            background: #fce4ec;
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 20px;
+            background: #FFF5F5;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .shop-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
 
         .selected-shop-info p {
             font-size: 14px;
-            color: #c2185b;
+            color: var(--text-sub);
         }
 
         .selected-shop-info strong {
             font-weight: 700;
+            color: var(--text-main);
         }
 
         .order-form {
@@ -482,39 +725,67 @@
             gap: 20px;
         }
 
-        .form-group {
+        .form-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 30px 0 16px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 8px;
         }
 
+        .form-section-title::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
         .form-group label {
+            display: block;
             font-size: 14px;
             font-weight: 600;
-            color: #333;
+            color: var(--text-sub);
+            margin-bottom: 8px;
         }
 
         .form-group label .required {
-            color: #e91e63;
+            color: var(--primary);
+            margin-left: 2px;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
+            width: 100%;
             padding: 14px 16px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            background: #F8F9FA;
+            border: 1px solid #eee;
+            border-radius: 12px;
             font-size: 15px;
+            color: var(--text-main);
             font-family: inherit;
             outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.2s;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: #e91e63;
-            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 138, 128, 0.1);
         }
 
         .form-group input::placeholder,
@@ -522,100 +793,93 @@
             color: #bbb;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
         .form-group select {
             appearance: none;
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;
-            background-color: #fff;
+            background-color: #F8F9FA;
             cursor: pointer;
         }
 
-        .form-section-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #333;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #e91e63;
-            margin-bottom: 4px;
+        .form-group select:focus {
+            background-color: #fff;
         }
 
-        /* 색상 선택 */
+        /* 색상 선택 옵션 */
         .color-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
 
         .color-option {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 6px;
-            padding: 10px 14px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            width: calc(33.33% - 8px);
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 16px;
+            background: #fff;
+            transition: all 0.2s;
         }
 
         .color-option:hover {
-            border-color: #e91e63;
+            border-color: #ddd;
         }
 
         .color-option.selected {
-            border-color: #e91e63;
-            background: #fce4ec;
+            border-color: var(--primary);
+            background: #FFF5F5;
         }
 
         .color-dot {
-            width: 16px;
-            height: 16px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            border: 1px solid #ddd;
+            margin-bottom: 8px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .color-dot.red { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); }
-        .color-dot.pink { background: linear-gradient(135deg, #ff9eb5, #ff7aa2); }
-        .color-dot.yellow { background: linear-gradient(135deg, #ffd93d, #f9c74f); }
-        .color-dot.white { background: #fff; }
-        .color-dot.purple { background: linear-gradient(135deg, #a855f7, #9333ea); }
-        .color-dot.mixed { background: linear-gradient(135deg, #ff6b6b 25%, #ffd93d 50%, #a855f7 75%); }
+        .color-dot.red { background: #FF5252; }
+        .color-dot.pink { background: #FF80AB; }
+        .color-dot.yellow { background: #FFD740; }
+        .color-dot.white { background: #FFFFFF; border: 1px solid #ddd; }
+        .color-dot.purple { background: #E040FB; }
+        .color-dot.mixed { background: linear-gradient(135deg, #FF5252, #FFD740, #E040FB); }
 
         .color-label {
             font-size: 13px;
-            color: #555;
+            font-weight: 500;
+            color: var(--text-main);
         }
 
         /* 주문 버튼 영역 */
         .order-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            margin-top: 40px;
         }
 
         .btn-kakao-order {
-            flex: 1;
             width: 100%;
-            padding: 14px 20px;
+            padding: 18px;
+            background: #FEE500;
+            color: #191919;
             border: none;
-            border-radius: 10px;
+            border-radius: 16px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            background: #fae100;
-            color: #3c1e1e;
+            gap: 10px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(254, 229, 0, 0.4);
         }
 
         .btn-kakao-order:hover {
-            background: #f5d800;
+            background: #F5D800;
         }
 
         .btn-kakao-order:active {
@@ -625,35 +889,39 @@
         .btn-kakao-order svg {
             width: 24px;
             height: 24px;
-            fill: #3c1e1e;
+            fill: #191919;
         }
 
         .order-notice {
-            text-align: center;
             margin-top: 16px;
+            text-align: center;
         }
 
         .order-notice p {
             font-size: 13px;
-            color: #666;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
 
         /* 광고 구좌 */
         .ad-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+            padding: 0 24px;
+            margin-top: 40px;
         }
 
         .ad-placeholder {
             width: 100%;
-            height: 100px;
-            background: #f5f5f5;
-            border-radius: 12px;
+            height: 120px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #aaa;
+            color: #666;
+            font-weight: 500;
             font-size: 14px;
             overflow: hidden;
         }
@@ -666,16 +934,17 @@
 
         /* 푸터 */
         .footer {
-            margin-top: 30px;
-            padding: 20px 0;
+            margin-top: 40px;
+            padding: 40px 24px;
             text-align: center;
+            background: #f8f9fa;
             border-top: 1px solid #eee;
         }
 
         .footer p {
             font-size: 12px;
-            color: #999;
-            line-height: 1.6;
+            color: #aaa;
+            margin-bottom: 6px;
         }
 
         /* 토스트 메시지 */
@@ -684,12 +953,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
-            background: #333;
-            color: #fff;
-            padding: 16px 32px;
-            border-radius: 12px;
-            font-size: 15px;
+            background: rgba(44, 44, 44, 0.95);
+            color: white;
+            backdrop-filter: blur(8px);
+            padding: 16px 24px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             font-weight: 500;
+            font-size: 15px;
             opacity: 0;
             transition: all 0.3s ease;
             z-index: 10001;
@@ -714,7 +985,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px rgba(254, 229, 0, 0.4);
+            border: 2px solid #fff;
             cursor: pointer;
             z-index: 9999;
             text-decoration: none;
@@ -723,7 +995,7 @@
 
         .kakao-float-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 30px rgba(254, 229, 0, 0.5);
         }
 
         .kakao-float-btn svg {
@@ -747,7 +1019,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 10000;
             align-items: center;
             justify-content: center;
@@ -760,18 +1033,19 @@
 
         .modal-content {
             background: #fff;
-            border-radius: 16px;
+            border-radius: 24px;
             width: 100%;
             max-width: 500px;
             max-height: 80vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
 
         .modal-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid #eee;
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -780,7 +1054,7 @@
         .modal-header h3 {
             font-size: 18px;
             font-weight: 700;
-            color: #333;
+            color: var(--text-main);
         }
 
         .modal-close {
@@ -815,30 +1089,32 @@
 
         .modal-search-input {
             flex: 1;
-            padding: 12px 14px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 1px solid #eee;
+            border-radius: 12px;
             font-size: 15px;
             outline: none;
+            background: #F8F9FA;
         }
 
         .modal-search-input:focus {
-            border-color: #e91e63;
+            border-color: var(--primary);
+            background: #fff;
         }
 
         .modal-search-btn {
-            padding: 12px 20px;
-            background: #e91e63;
+            padding: 14px 20px;
+            background: var(--text-main);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
         }
 
         .modal-search-btn:hover {
-            background: #c2185b;
+            background: #1a1a1a;
         }
 
         .places-list {
@@ -846,16 +1122,15 @@
         }
 
         .places-list .item {
-            padding: 14px 0;
+            padding: 16px 20px;
             border-bottom: 1px solid #eee;
             cursor: pointer;
             transition: background 0.2s;
+            margin: 0 -20px;
         }
 
         .places-list .item:hover {
-            background: #fce4ec;
-            margin: 0 -20px;
-            padding: 14px 20px;
+            background: #FFF5F5;
         }
 
         .places-list .item:last-child {
@@ -865,20 +1140,20 @@
         .places-list .info h5 {
             font-size: 15px;
             font-weight: 600;
-            color: #333;
+            color: var(--text-main);
             margin-bottom: 4px;
         }
 
         .places-list .info span {
             font-size: 13px;
-            color: #888;
+            color: var(--text-sub);
             display: block;
         }
 
         .search-status {
             text-align: center;
             padding: 20px;
-            color: #888;
+            color: var(--text-sub);
             font-size: 14px;
         }
 
@@ -891,8 +1166,8 @@
 
         .pagination a {
             padding: 8px 14px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: 1px solid #eee;
+            border-radius: 8px;
             color: #666;
             text-decoration: none;
             font-size: 14px;
@@ -903,47 +1178,51 @@
         }
 
         .pagination a.on {
-            background: #e91e63;
+            background: var(--primary);
             color: #fff;
-            border-color: #e91e63;
+            border-color: var(--primary);
         }
 
         /* 모바일 최적화 */
         @media (max-width: 480px) {
             .container {
-                padding: 12px;
+                padding-bottom: 60px;
+            }
+
+            .header {
+                padding: 30px 20px 16px;
             }
 
             .header h1 {
-                font-size: 20px;
+                font-size: 22px;
+            }
+
+            .search-section {
+                padding: 20px;
             }
 
             .search-input {
-                padding: 12px 14px;
+                padding: 14px 16px;
+                padding-right: 90px;
                 font-size: 15px;
             }
 
             .address-search-btn {
-                padding: 12px 12px;
-                font-size: 13px;
+                padding: 6px 10px;
+                font-size: 12px;
             }
 
             .search-btn {
-                padding: 12px 16px;
+                padding: 14px;
                 font-size: 15px;
+            }
+
+            .shop-list-section {
+                padding: 20px;
             }
 
             .shop-name {
-                font-size: 15px;
-            }
-
-            .gallery-item {
-                width: 100px;
-            }
-
-            .gallery-img {
-                width: 100px;
-                height: 100px;
+                font-size: 16px;
             }
 
             .form-group input,
@@ -954,12 +1233,12 @@
             }
 
             .order-buttons {
-                flex-direction: column;
+                margin-top: 30px;
             }
 
-            .btn-kakao-order,
-            .submit-btn {
-                width: 100%;
+            .btn-kakao-order {
+                padding: 16px;
+                font-size: 15px;
             }
 
             .kakao-float-btn {
@@ -980,24 +1259,26 @@
     <div class="container">
         <!-- 헤더 -->
         <header class="header">
-            <h1>꽃배달 서비스</h1>
-            <p>배송 주소를 입력하여 인근 꽃집을 찾아보세요</p>
+            <div class="header-top">Bloom Delivery</div>
+            <h1>마음을 담은 꽃,<br>지금 선물하세요</h1>
+            <p>전국 엄선된 플로리스트가 직접 제작합니다</p>
         </header>
 
         <!-- 검색 섹션 -->
         <section class="search-section" id="searchSection">
-            <label class="search-label">배송주소</label>
-            <div class="search-box">
-                <input type="text" class="search-input" id="searchInput" placeholder="주소를 입력하세요">
-                <button class="address-search-btn" onclick="openPlaceSearchModal()">주소검색</button>
+            <div class="search-wrapper">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="받으실 주소(동/읍/면)">
+                    <button class="address-search-btn" onclick="openPlaceSearchModal()">주소검색</button>
+                </div>
+                <button class="search-btn" onclick="searchShops()">내 주변 꽃집 찾기</button>
             </div>
-            <button class="search-btn" onclick="searchShops()">근처꽃집보기</button>
         </section>
 
         <!-- 꽃집 목록 섹션 -->
         <section class="shop-list-section" id="shopListSection">
             <div class="result-info" id="resultInfo" style="display: none;">
-                <strong id="searchedArea"></strong> 인근 꽃집 <strong id="shopCount"></strong>개
+                <span id="searchedArea"></span> 근처에서 <strong id="shopCount">0</strong>개의 꽃집을 찾았어요
             </div>
             <div class="shop-list" id="shopList">
                 <!-- 꽃집 카드가 여기에 동적으로 추가됩니다 -->
@@ -1006,152 +1287,180 @@
 
         <!-- 주문서 섹션 -->
         <section class="order-section" id="orderSection">
-            <button class="back-btn" onclick="goBack()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-                꽃집 목록으로 돌아가기
-            </button>
-
-            <div class="selected-shop-info" id="selectedShopInfo">
-                <p>선택한 꽃집: <strong id="selectedShopName"></strong></p>
+            <div class="order-header">
+                <button class="back-btn" onclick="goBack()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                    돌아가기
+                </button>
             </div>
 
-            <form class="order-form" id="orderForm" onsubmit="submitOrder(event)">
-                <!-- 상품 정보 -->
-                <div class="form-section-title">상품 정보</div>
-
-                <div class="form-group">
-                    <label>꽃 종류 <span class="required">*</span></label>
-                    <select id="flowerType" required>
-                        <option value="">선택해주세요</option>
-                        <option value="bouquet">꽃다발</option>
-                        <option value="basket">꽃바구니</option>
-                        <option value="box">플라워박스</option>
-                        <option value="plant">화분/식물</option>
-                        <option value="wreath">화환</option>
-                    </select>
+            <div class="order-content">
+                <div class="selected-shop-info" id="selectedShopInfo">
+                    <div class="shop-icon">🏡</div>
+                    <div>
+                        <p>선택하신 꽃집</p>
+                        <p><strong id="selectedShopName"></strong></p>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>가격대 <span class="required">*</span></label>
-                    <select id="priceRange" required>
-                        <option value="">선택해주세요</option>
-                        <option value="30000">3만원대</option>
-                        <option value="50000">5만원대</option>
-                        <option value="70000">7만원대</option>
-                        <option value="100000">10만원대</option>
-                        <option value="150000">15만원 이상</option>
-                    </select>
-                </div>
+                <form class="order-form" id="orderForm" onsubmit="submitOrder(event)">
+                    <!-- 상품 정보 -->
+                    <div class="form-section-title">어떤 꽃을 보내실까요?</div>
 
-                <div class="form-group">
-                    <label>원하는 색상 <span class="required">*</span></label>
-                    <div class="color-options" id="colorOptions">
-                        <div class="color-option" data-color="red" onclick="selectColor(this)">
-                            <span class="color-dot red"></span>
-                            <span class="color-label">레드</span>
+                    <div class="form-group">
+                        <label>꽃 종류 <span class="required">*</span></label>
+                        <select id="flowerType" required>
+                            <option value="">종류를 선택해주세요</option>
+                            <option value="bouquet">💐 꽃다발</option>
+                            <option value="basket">🧺 꽃바구니</option>
+                            <option value="box">🎁 플라워박스</option>
+                            <option value="plant">🪴 화분/식물</option>
+                            <option value="wreath">🎀 화환</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>예산 <span class="required">*</span></label>
+                        <select id="priceRange" required>
+                            <option value="">원하시는 가격대</option>
+                            <option value="30000">3만원대 (가벼운 선물)</option>
+                            <option value="50000">5만원대 (가장 인기)</option>
+                            <option value="70000">7만원대 (풍성하게)</option>
+                            <option value="100000">10만원대 (특별한 날)</option>
+                            <option value="150000">15만원 이상 (프리미엄)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>메인 컬러톤 <span class="required">*</span></label>
+                        <div class="color-options" id="colorOptions">
+                            <div class="color-option" data-color="red" onclick="selectColor(this)">
+                                <span class="color-dot red"></span>
+                                <span class="color-label">로맨틱 레드</span>
+                            </div>
+                            <div class="color-option" data-color="pink" onclick="selectColor(this)">
+                                <span class="color-dot pink"></span>
+                                <span class="color-label">러블리 핑크</span>
+                            </div>
+                            <div class="color-option" data-color="yellow" onclick="selectColor(this)">
+                                <span class="color-dot yellow"></span>
+                                <span class="color-label">화사한 옐로우</span>
+                            </div>
+                            <div class="color-option" data-color="white" onclick="selectColor(this)">
+                                <span class="color-dot white"></span>
+                                <span class="color-label">순수 화이트</span>
+                            </div>
+                            <div class="color-option" data-color="purple" onclick="selectColor(this)">
+                                <span class="color-dot purple"></span>
+                                <span class="color-label">우아한 퍼플</span>
+                            </div>
+                            <div class="color-option" data-color="mixed" onclick="selectColor(this)">
+                                <span class="color-dot mixed"></span>
+                                <span class="color-label">플로리스트 추천</span>
+                            </div>
                         </div>
-                        <div class="color-option" data-color="pink" onclick="selectColor(this)">
-                            <span class="color-dot pink"></span>
-                            <span class="color-label">핑크</span>
-                        </div>
-                        <div class="color-option" data-color="yellow" onclick="selectColor(this)">
-                            <span class="color-dot yellow"></span>
-                            <span class="color-label">옐로우</span>
-                        </div>
-                        <div class="color-option" data-color="white" onclick="selectColor(this)">
-                            <span class="color-dot white"></span>
-                            <span class="color-label">화이트</span>
-                        </div>
-                        <div class="color-option" data-color="purple" onclick="selectColor(this)">
-                            <span class="color-dot purple"></span>
-                            <span class="color-label">퍼플</span>
-                        </div>
-                        <div class="color-option" data-color="mixed" onclick="selectColor(this)">
-                            <span class="color-dot mixed"></span>
-                            <span class="color-label">믹스</span>
+                        <input type="hidden" id="selectedColor" required>
+                    </div>
+
+                    <!-- 주문자 정보 -->
+                    <div class="form-section-title">주문하시는 분</div>
+
+                    <div class="form-group">
+                        <label>성함 <span class="required">*</span></label>
+                        <input type="text" id="senderName" placeholder="보내시는 분 성함" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>연락처 <span class="required">*</span></label>
+                        <input type="tel" id="senderPhone" placeholder="연락 받으실 번호" required>
+                    </div>
+
+                    <!-- 받는분 정보 -->
+                    <div class="form-section-title">받으시는 분</div>
+
+                    <div class="form-group">
+                        <label>성함 <span class="required">*</span></label>
+                        <input type="text" id="receiverName" placeholder="받으시는 분 성함" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>연락처 <span class="required">*</span></label>
+                        <input type="tel" id="receiverPhone" placeholder="받으시는 분 연락처" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>배송 주소 <span class="required">*</span></label>
+                        <input type="text" id="receiverAddress" placeholder="주소를 검색해주세요" required readonly onclick="showToast('배송 주소는 꽃집 선택 전 검색해주세요')">
+                    </div>
+
+                    <div class="form-group">
+                        <label>상세 주소</label>
+                        <input type="text" id="receiverAddressDetail" placeholder="동/호수, 공동현관 비밀번호 등">
+                    </div>
+
+                    <div class="form-group">
+                        <label>배송 희망일시</label>
+                        <div class="delivery-time-wrapper">
+                            <label class="asap-option">
+                                <input type="checkbox" id="asapDelivery" onchange="toggleAsapDelivery()">
+                                <span>🚀 준비되는 대로 가장 빠르게 보내주세요</span>
+                            </label>
+                            <div class="delivery-date-row">
+                                <input type="date" id="deliveryDate" onchange="updateDayOfWeek()">
+                                <select id="deliveryHour">
+                                    <option value="">시간</option>
+                                    <option value="09">09시</option>
+                                    <option value="10">10시</option>
+                                    <option value="11">11시</option>
+                                    <option value="12">12시</option>
+                                    <option value="13">13시</option>
+                                    <option value="14">14시</option>
+                                    <option value="15">15시</option>
+                                    <option value="16">16시</option>
+                                    <option value="17">17시</option>
+                                    <option value="18">18시</option>
+                                </select>
+                            </div>
+                            <div id="dayOfWeek" style="font-size: 13px; color: var(--primary); text-align:right;"></div>
                         </div>
                     </div>
-                    <input type="hidden" id="selectedColor" required>
-                </div>
 
-                <!-- 주문자 정보 -->
-                <div class="form-section-title">주문자 정보</div>
+                    <div class="form-group">
+                        <label>카드 메시지</label>
+                        <textarea id="cardMessage" placeholder="꽃과 함께 전할 메시지를 적어주세요 (50자 이내)"></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label>주문자명 <span class="required">*</span></label>
-                    <input type="text" id="senderName" placeholder="주문자 성함" required>
-                </div>
+                    <div class="form-group">
+                        <label>요청사항</label>
+                        <textarea id="request" placeholder="예) 문 앞에 두고 벨 눌러주세요, 핑크톤을 더 많이 넣어주세요 등"></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label>주문자 연락처 <span class="required">*</span></label>
-                    <input type="tel" id="senderPhone" placeholder="010-0000-0000" required>
-                </div>
+                    <div class="order-buttons">
+                        <button type="button" class="btn-kakao-order" onclick="openKakaoChat()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#191919"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.84 1.88 5.33 4.7 6.77L5.6 21l4.08-2.41c.76.11 1.53.16 2.32.16 5.5 0 10-3.58 10-8s-4.5-8-10-8z"/></svg>
+                            카카오톡으로 주문 접수하기
+                        </button>
+                    </div>
 
-                <!-- 받는분 정보 -->
-                <div class="form-section-title">받는분 정보</div>
-
-                <div class="form-group">
-                    <label>받는분 성함 <span class="required">*</span></label>
-                    <input type="text" id="receiverName" placeholder="받는분 성함" required>
-                </div>
-
-                <div class="form-group">
-                    <label>받는분 연락처 <span class="required">*</span></label>
-                    <input type="tel" id="receiverPhone" placeholder="010-0000-0000" required>
-                </div>
-
-                <div class="form-group">
-                    <label>배송 주소 <span class="required">*</span></label>
-                    <input type="text" id="receiverAddress" placeholder="배송받으실 주소" required>
-                </div>
-
-                <div class="form-group">
-                    <label>상세 주소</label>
-                    <input type="text" id="receiverAddressDetail" placeholder="상세 주소를 입력해주세요 (동/호수 등)">
-                </div>
-
-                <div class="form-group">
-                    <label>배송 희망일시</label>
-                    <input type="datetime-local" id="deliveryDate">
-                </div>
-
-                <div class="form-group">
-                    <label>카드 문구</label>
-                    <textarea id="cardMessage" placeholder="카드에 들어갈 문구를 입력해주세요"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>요청사항</label>
-                    <textarea id="request" placeholder="꽃집에 전달할 요청사항을 입력해주세요"></textarea>
-                </div>
-
-                <div class="order-buttons">
-                    <button type="button" class="btn-kakao-order" onclick="openKakaoChat()">
-                        <svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.84 1.88 5.33 4.7 6.77L5.6 21l4.08-2.41c.76.11 1.53.16 2.32.16 5.5 0 10-3.58 10-8s-4.5-8-10-8z"/></svg>
-                        카톡 주문하기
-                    </button>
-                </div>
-
-                <div class="order-notice">
-                    <p>카톡주문 가능시간 | 평일 09:00~18:00</p>
-                </div>
-            </form>
+                    <div class="order-notice">
+                        <p>📢 상담 가능 시간 | 평일 09:00 ~ 18:00</p>
+                    </div>
+                </form>
+            </div>
         </section>
 
         <!-- 광고 구좌 -->
         <section class="ad-section">
             <div class="ad-placeholder" id="adArea">
-                <!-- 광고 이미지를 여기에 삽입하세요 -->
-                광고 영역
+                Special Event Banner
             </div>
         </section>
 
         <!-- 푸터 -->
         <footer class="footer">
-            <p>고객센터: 1234-5678</p>
-            <p>운영시간: 평일 09:00 ~ 18:00</p>
+            <p><strong>블룸 딜리버리 (Bloom Delivery)</strong></p>
+            <p>고객센터: 1544-0000 | 평일 09:00 - 18:00</p>
+            <p>Copyright © Bloom Delivery. All rights reserved.</p>
         </footer>
     </div>
 
@@ -1164,7 +1473,7 @@
             </div>
             <div class="modal-body">
                 <div class="modal-search-box">
-                    <input type="text" class="modal-search-input" id="placeKeyword" placeholder="장소명 또는 주소 입력">
+                    <input type="text" class="modal-search-input" id="placeKeyword" placeholder="동/읍/면 또는 건물명 입력">
                     <button class="modal-search-btn" onclick="searchPlaces()">검색</button>
                 </div>
                 <div class="search-status" id="placeSearchStatus"></div>
@@ -1184,7 +1493,8 @@
             <div class="image-modal-img" id="imageModalImg"></div>
             <div class="image-modal-info">
                 <div class="image-modal-type" id="imageModalType"></div>
-                <div class="image-modal-price" id="imageModalPrice"></div>
+                <div class="image-modal-price" id="imageModalPrice" onclick="selectProductFromModal()"></div>
+                <div class="image-modal-hint">👆 가격을 누르면 바로 선택됩니다</div>
             </div>
         </div>
     </div>
@@ -1200,11 +1510,12 @@
 
     <script>
         // 꽃집 데이터 (이름, 사진, 배송 가능 지역 등록)
+        // 배송 가능 지역 형식: "시도+구군" (예: "서울+송파구", "부산+동구")
         const flowerShops = [
             {
                 id: 'seoul-a',
                 name: '서울A 플라워',
-                deliveryAreas: ['송파구', '강남구', '서초구', '강동구'],
+                deliveryAreas: ['서울+송파구', '서울+강남구', '서울+서초구', '서울+강동구'],
                 flowers: [
                     { img: '', price: '35,000원', type: '꽃다발' },
                     { img: '', price: '55,000원', type: '꽃바구니' },
@@ -1215,7 +1526,7 @@
             {
                 id: 'seoul-b',
                 name: '서울B 플로리스트',
-                deliveryAreas: ['마포구', '서대문구', '은평구', '종로구'],
+                deliveryAreas: ['서울+마포구', '서울+서대문구', '서울+은평구', '서울+종로구'],
                 flowers: [
                     { img: '', price: '40,000원', type: '꽃다발' },
                     { img: '', price: '60,000원', type: '꽃바구니' },
@@ -1225,7 +1536,7 @@
             {
                 id: 'seoul-c',
                 name: '서울C 꽃집',
-                deliveryAreas: ['강남구', '종로구', '중구', '용산구', '성동구'],
+                deliveryAreas: ['서울+강남구', '서울+종로구', '서울+중구', '서울+용산구', '서울+성동구'],
                 flowers: [
                     { img: '', price: '30,000원', type: '꽃다발' },
                     { img: '', price: '50,000원', type: '꽃바구니' },
@@ -1235,9 +1546,29 @@
                 ]
             },
             {
+                id: 'busan-dong',
+                name: '부산동구플라워',
+                deliveryAreas: ['부산+동구', '부산+중구', '부산+서구', '부산+영도구'],
+                flowers: [
+                    { img: '', price: '30,000원', type: '꽃다발' },
+                    { img: '', price: '50,000원', type: '꽃바구니' },
+                    { img: '', price: '70,000원', type: '플라워박스' }
+                ]
+            },
+            {
+                id: 'gwangju-dong',
+                name: '광주동구꽃배달',
+                deliveryAreas: ['광주+동구', '광주+서구', '광주+남구', '광주+북구'],
+                flowers: [
+                    { img: '', price: '28,000원', type: '꽃다발' },
+                    { img: '', price: '48,000원', type: '꽃바구니' },
+                    { img: '', price: '68,000원', type: '플라워박스' }
+                ]
+            },
+            {
                 id: 'gangnam-flower',
                 name: '강남플라워',
-                deliveryAreas: ['강남구', '서초구', '송파구'],
+                deliveryAreas: ['서울+강남구', '서울+서초구', '서울+송파구'],
                 flowers: [
                     { img: '', price: '50,000원', type: '꽃다발' },
                     { img: '', price: '80,000원', type: '꽃바구니' },
@@ -1247,7 +1578,7 @@
             {
                 id: 'jongro-flower',
                 name: '종로꽃배달',
-                deliveryAreas: ['종로구', '중구', '서대문구', '마포구'],
+                deliveryAreas: ['서울+종로구', '서울+중구', '서울+서대문구', '서울+마포구'],
                 flowers: [
                     { img: '', price: '32,000원', type: '꽃다발' },
                     { img: '', price: '52,000원', type: '꽃바구니' },
@@ -1394,11 +1725,16 @@
             // 직접 입력한 주소도 저장
             selectedAddress = address;
 
-            // 주소에서 지역명(구/동) 추출
-            const areaName = extractAreaName(address);
+            // 주소에서 "시도+구군" 형태로 추출
+            const areaKey = extractAreaKey(address);
+
+            if (!areaKey) {
+                showToast('주소에서 지역을 찾을 수 없습니다');
+                return;
+            }
 
             // 배송 가능 지역에 해당 지역이 포함된 꽃집 필터링
-            const shops = findShopsByDeliveryArea(areaName);
+            const shops = findShopsByDeliveryArea(areaKey);
 
             if (shops.length === 0) {
                 showToast('해당 지역에 배송 가능한 꽃집이 없습니다');
@@ -1407,39 +1743,92 @@
                 return;
             }
 
-            displayShops(areaName, shops);
+            // 표시용 지역명 (구/군 이름만)
+            const displayArea = areaKey.split('+')[1] || areaKey;
+            displayShops(displayArea, shops);
         }
 
-        // 주소에서 구/동 이름 추출
-        function extractAreaName(address) {
-            // "구" 단위 추출 시도 (예: 송파구, 강남구)
-            const guMatch = address.match(/([가-힣]+구)/);
-            if (guMatch) {
-                return guMatch[1];
+        // 시/도 이름 정규화 (서울특별시 -> 서울, 부산광역시 -> 부산 등)
+        function normalizeCityName(cityName) {
+            const cityMap = {
+                '서울특별시': '서울', '서울시': '서울', '서울': '서울',
+                '부산광역시': '부산', '부산시': '부산', '부산': '부산',
+                '대구광역시': '대구', '대구시': '대구', '대구': '대구',
+                '인천광역시': '인천', '인천시': '인천', '인천': '인천',
+                '광주광역시': '광주', '광주시': '광주', '광주': '광주',
+                '대전광역시': '대전', '대전시': '대전', '대전': '대전',
+                '울산광역시': '울산', '울산시': '울산', '울산': '울산',
+                '세종특별자치시': '세종', '세종시': '세종', '세종': '세종',
+                '경기도': '경기', '경기': '경기',
+                '강원특별자치도': '강원', '강원도': '강원', '강원': '강원',
+                '충청북도': '충북', '충북': '충북',
+                '충청남도': '충남', '충남': '충남',
+                '전북특별자치도': '전북', '전라북도': '전북', '전북': '전북',
+                '전라남도': '전남', '전남': '전남',
+                '경상북도': '경북', '경북': '경북',
+                '경상남도': '경남', '경남': '경남',
+                '제주특별자치도': '제주', '제주도': '제주', '제주': '제주'
+            };
+            return cityMap[cityName] || cityName;
+        }
+
+        // 주소에서 "시도+구군" 형태의 키 추출
+        function extractAreaKey(address) {
+            // 시/도 추출 패턴
+            const cityPatterns = [
+                /([가-힣]+특별시)/,
+                /([가-힣]+광역시)/,
+                /([가-힣]+특별자치시)/,
+                /([가-힣]+특별자치도)/,
+                /([가-힣]+도)/,
+                /^(서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주)/
+            ];
+
+            // 구/군 추출 패턴
+            const districtPatterns = [
+                /([가-힣]+구)/,
+                /([가-힣]+군)/,
+                /([가-힣]+시)(?!특별|광역)/ // 시 단위 (특별시, 광역시 제외)
+            ];
+
+            let city = null;
+            let district = null;
+
+            // 시/도 추출
+            for (const pattern of cityPatterns) {
+                const match = address.match(pattern);
+                if (match) {
+                    city = normalizeCityName(match[1]);
+                    break;
+                }
             }
 
-            // "동" 단위 추출 시도 (예: 잠실동, 역삼동)
-            const dongMatch = address.match(/([가-힣]+동)/);
-            if (dongMatch) {
-                return dongMatch[1];
+            // 구/군 추출
+            for (const pattern of districtPatterns) {
+                const match = address.match(pattern);
+                if (match) {
+                    district = match[1];
+                    break;
+                }
             }
 
-            // 공백으로 분리하여 두 번째 요소 반환
-            const parts = address.split(' ');
-            if (parts.length >= 2) {
-                return parts[1];
+            // 둘 다 있으면 조합
+            if (city && district) {
+                return city + '+' + district;
             }
 
-            return address;
+            // 시/도만 있는 경우 (세종시 등)
+            if (city && !district) {
+                return city;
+            }
+
+            return null;
         }
 
         // 배송 가능 지역으로 꽃집 검색
-        function findShopsByDeliveryArea(searchArea) {
+        function findShopsByDeliveryArea(searchKey) {
             return flowerShops.filter(shop => {
-                // 배송 가능 지역 중 검색어가 포함되어 있는지 확인
-                return shop.deliveryAreas.some(area =>
-                    area.includes(searchArea) || searchArea.includes(area)
-                );
+                return shop.deliveryAreas.some(area => area === searchKey);
             });
         }
 
@@ -1460,10 +1849,12 @@
                     <div class="gallery-wrapper">
                         <div class="shop-gallery" id="gallery-${shopIdx}" onscroll="updateScrollbar('gallery-${shopIdx}')">
                             ${shop.flowers.map((flower, idx) => `
-                                <div class="gallery-item" onclick="openImageModal('${flower.img || ''}', '${flower.price}', '${flower.type}', ${idx + 1})">
+                                <div class="gallery-item" onclick="openImageModal('${flower.img || ''}', '${flower.price}', '${flower.type}', ${idx + 1}, '${shop.id}', '${shop.name}')">
                                     <div class="gallery-img">${flower.img || '사진 ' + (idx + 1)}</div>
-                                    <div class="gallery-price">${flower.price}</div>
-                                    <div class="gallery-type">${flower.type}</div>
+                                    <div class="gallery-info-box">
+                                        <span class="gallery-type">${flower.type}</span>
+                                        <div class="gallery-price">${flower.price}</div>
+                                    </div>
                                 </div>
                             `).join('')}
                         </div>
@@ -1498,7 +1889,7 @@
         // 갤러리 스크롤 (화살표 버튼)
         function scrollGallery(galleryId, direction) {
             const gallery = document.getElementById(galleryId);
-            const itemWidth = 128; // 아이템 너비 + gap
+            const itemWidth = 142; // 아이템 너비(130px) + gap(12px)
             gallery.scrollLeft += direction * itemWidth;
         }
 
@@ -1558,6 +1949,10 @@
             document.getElementById('receiverPhone').value = '';
             document.getElementById('receiverAddressDetail').value = '';
             document.getElementById('deliveryDate').value = '';
+            document.getElementById('deliveryHour').value = '';
+            document.getElementById('dayOfWeek').textContent = '';
+            document.getElementById('asapDelivery').checked = false;
+            document.querySelector('.delivery-date-row').classList.remove('disabled');
             document.getElementById('cardMessage').value = '';
             document.getElementById('request').value = '';
             resetColorSelection();
@@ -1599,6 +1994,7 @@
                 return;
             }
 
+            const isAsap = document.getElementById('asapDelivery').checked;
             const orderData = {
                 shop: selectedShop,
                 flowerType: document.getElementById('flowerType').value,
@@ -1614,7 +2010,8 @@
                     address: document.getElementById('receiverAddress').value,
                     addressDetail: document.getElementById('receiverAddressDetail').value
                 },
-                deliveryDate: document.getElementById('deliveryDate').value,
+                deliveryDate: isAsap ? '최대한 빨리' : document.getElementById('deliveryDate').value,
+                deliveryHour: isAsap ? '' : document.getElementById('deliveryHour').value,
                 cardMessage: document.getElementById('cardMessage').value,
                 request: document.getElementById('request').value
             };
@@ -1648,12 +2045,24 @@
             }
         });
 
+        // 현재 모달에 표시 중인 상품 정보 저장
+        let currentModalProduct = null;
+
         // 상품 확대 모달 열기
-        function openImageModal(img, price, type, index) {
+        function openImageModal(img, price, type, index, shopId, shopName) {
             const modal = document.getElementById('imageModal');
             const imgContainer = document.getElementById('imageModalImg');
             const priceEl = document.getElementById('imageModalPrice');
             const typeEl = document.getElementById('imageModalType');
+
+            // 현재 상품 정보 저장
+            currentModalProduct = {
+                img: img,
+                price: price,
+                type: type,
+                shopId: shopId,
+                shopName: shopName
+            };
 
             if (img) {
                 imgContainer.innerHTML = `<img src="${img}" alt="${type}">`;
@@ -1666,6 +2075,77 @@
 
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
+        }
+
+        // 모달에서 상품 선택
+        function selectProductFromModal() {
+            if (!currentModalProduct) return;
+
+            closeImageModal();
+            selectShop(currentModalProduct.shopId, currentModalProduct.shopName);
+
+            // 꽃 종류와 가격대 자동 설정
+            setTimeout(() => {
+                // 꽃 종류 매칭
+                const typeMap = {
+                    '꽃다발': 'bouquet',
+                    '꽃바구니': 'basket',
+                    '플라워박스': 'box',
+                    '화분': 'plant',
+                    '식물': 'plant',
+                    '화환': 'wreath'
+                };
+                const flowerTypeValue = typeMap[currentModalProduct.type];
+                if (flowerTypeValue) {
+                    document.getElementById('flowerType').value = flowerTypeValue;
+                }
+
+                // 가격대 매칭 (가격에서 숫자 추출)
+                const priceNum = parseInt(currentModalProduct.price.replace(/[^0-9]/g, ''));
+                let priceRangeValue = '';
+                if (priceNum <= 40000) priceRangeValue = '30000';
+                else if (priceNum <= 60000) priceRangeValue = '50000';
+                else if (priceNum <= 85000) priceRangeValue = '70000';
+                else if (priceNum <= 120000) priceRangeValue = '100000';
+                else priceRangeValue = '150000';
+
+                document.getElementById('priceRange').value = priceRangeValue;
+
+                showToast('상품이 선택되었습니다');
+            }, 100);
+        }
+
+        // 날짜 선택시 요일 표시
+        function updateDayOfWeek() {
+            const dateInput = document.getElementById('deliveryDate');
+            const dayOfWeekEl = document.getElementById('dayOfWeek');
+
+            if (dateInput.value) {
+                const date = new Date(dateInput.value);
+                const days = ['일', '월', '화', '수', '목', '금', '토'];
+                const dayName = days[date.getDay()];
+                dayOfWeekEl.textContent = '(' + dayName + ')';
+            } else {
+                dayOfWeekEl.textContent = '';
+            }
+        }
+
+        // 최대한 빨리 체크박스 토글
+        function toggleAsapDelivery() {
+            const checkbox = document.getElementById('asapDelivery');
+            const dateRow = document.querySelector('.delivery-date-row');
+            const dateInput = document.getElementById('deliveryDate');
+            const hourSelect = document.getElementById('deliveryHour');
+            const dayOfWeekEl = document.getElementById('dayOfWeek');
+
+            if (checkbox.checked) {
+                dateRow.classList.add('disabled');
+                dateInput.value = '';
+                hourSelect.value = '';
+                dayOfWeekEl.textContent = '';
+            } else {
+                dateRow.classList.remove('disabled');
+            }
         }
 
         // 상품 확대 모달 닫기
