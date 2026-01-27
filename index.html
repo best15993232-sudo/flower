@@ -875,7 +875,6 @@
             justify-content: center;
             gap: 10px;
             transition: transform 0.2s;
-            box-shadow: 0 4px 12px rgba(254, 229, 0, 0.4);
         }
 
         .btn-kakao-order:hover {
@@ -985,7 +984,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 24px rgba(254, 229, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: 2px solid #fff;
             cursor: pointer;
             z-index: 9999;
@@ -995,7 +994,11 @@
 
         .kakao-float-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(254, 229, 0, 0.5);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .kakao-float-btn span {
+            display: none;
         }
 
         .kakao-float-btn svg {
@@ -1268,10 +1271,10 @@
         <section class="search-section" id="searchSection">
             <div class="search-wrapper">
                 <div class="search-box">
-                    <input type="text" class="search-input" id="searchInput" placeholder="받으실 주소(동/읍/면)">
+                    <input type="text" class="search-input" id="searchInput" placeholder="받으실 주소를 입력해주세요">
                     <button class="address-search-btn" onclick="openPlaceSearchModal()">주소검색</button>
                 </div>
-                <button class="search-btn" onclick="searchShops()">내 주변 꽃집 찾기</button>
+                <button class="search-btn" onclick="searchShops()">주변 꽃집 찾기</button>
             </div>
         </section>
 
@@ -1305,7 +1308,7 @@
 
                 <form class="order-form" id="orderForm" onsubmit="submitOrder(event)">
                     <!-- 상품 정보 -->
-                    <div class="form-section-title">어떤 꽃을 보내실까요?</div>
+                    <div class="form-section-title">어떤 꽃을 보내시나요?</div>
 
                     <div class="form-group">
                         <label>꽃 종류 <span class="required">*</span></label>
@@ -1313,9 +1316,6 @@
                             <option value="">종류를 선택해주세요</option>
                             <option value="bouquet">💐 꽃다발</option>
                             <option value="basket">🧺 꽃바구니</option>
-                            <option value="box">🎁 플라워박스</option>
-                            <option value="plant">🪴 화분/식물</option>
-                            <option value="wreath">🎀 화환</option>
                         </select>
                     </div>
 
@@ -1323,7 +1323,7 @@
                         <label>예산 <span class="required">*</span></label>
                         <select id="priceRange" required>
                             <option value="">원하시는 가격대</option>
-                            <option value="30000">3만원대 (가벼운 선물)</option>
+                            <option value="30000">5만원대 (가벼운 선물)</option>
                             <option value="50000">5만원대 (가장 인기)</option>
                             <option value="70000">7만원대 (풍성하게)</option>
                             <option value="100000">10만원대 (특별한 날)</option>
@@ -1409,16 +1409,16 @@
                                 <input type="date" id="deliveryDate" onchange="updateDayOfWeek()">
                                 <select id="deliveryHour">
                                     <option value="">시간</option>
-                                    <option value="09">09시</option>
-                                    <option value="10">10시</option>
-                                    <option value="11">11시</option>
-                                    <option value="12">12시</option>
-                                    <option value="13">13시</option>
-                                    <option value="14">14시</option>
-                                    <option value="15">15시</option>
-                                    <option value="16">16시</option>
-                                    <option value="17">17시</option>
-                                    <option value="18">18시</option>
+                                    <option value="09">09시까지</option>
+                                    <option value="10">10시까지</option>
+                                    <option value="11">11시까지</option>
+                                    <option value="12">12시까지</option>
+                                    <option value="13">오후 1시까지</option>
+                                    <option value="14">오후 2시까지</option>
+                                    <option value="15">오후 3시까지</option>
+                                    <option value="16">오후 4시까지</option>
+                                    <option value="17">오후 5시까지</option>
+                                    <option value="18">오후 6시까지</option>
                                 </select>
                             </div>
                             <div id="dayOfWeek" style="font-size: 13px; color: var(--primary); text-align:right;"></div>
